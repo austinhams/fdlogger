@@ -1,0 +1,25 @@
+<nav class="bg-indigo-600">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between">
+      <div class="flex items-center">
+        <div class="shrink-0">
+          <span class="text-white font-bold text-xl">&#128225; FD Logger</span>
+        </div>
+        <div class="ml-10 flex items-baseline space-x-4">
+          <a href="/" class="<%= page === 'dashboard' ? 'bg-indigo-700 text-white' : 'text-indigo-200 hover:bg-indigo-500 hover:bg-opacity-75 hover:text-white' %> rounded-md px-3 py-2 text-sm font-medium">Dashboard</a>
+          <a href="/stations" class="<%= page === 'stations' ? 'bg-indigo-700 text-white' : 'text-indigo-200 hover:bg-indigo-500 hover:bg-opacity-75 hover:text-white' %> rounded-md px-3 py-2 text-sm font-medium">Stations</a>
+          <a href="/export" class="<%= page === 'export' ? 'bg-indigo-700 text-white' : 'text-indigo-200 hover:bg-indigo-500 hover:bg-opacity-75 hover:text-white' %> rounded-md px-3 py-2 text-sm font-medium">Export</a>
+        </div>
+      </div>
+      <div class="text-indigo-200 text-sm" id="utcClock"></div>
+    </div>
+  </div>
+</nav>
+<script>
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('utcClock').textContent = 'UTC: ' + now.toISOString().slice(11, 19);
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>

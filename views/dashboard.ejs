@@ -1,0 +1,88 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+
+<main>
+  <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <h1 class="text-2xl font-bold tracking-tight text-gray-900">Dashboard</h1>
+  </div>
+
+  <!-- Stats -->
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <dl class="grid grid-cols-1 gap-5 sm:grid-cols-3">
+      <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+        <dt class="truncate text-sm font-medium text-gray-500">Total QSOs</dt>
+        <dd id="statQsos" class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><%= stats.total_qsos %></dd>
+      </div>
+      <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+        <dt class="truncate text-sm font-medium text-gray-500">Unique Callsigns</dt>
+        <dd id="statCalls" class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><%= stats.unique_calls %></dd>
+      </div>
+      <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+        <dt class="truncate text-sm font-medium text-gray-500">Sections Worked</dt>
+        <dd id="statSections" class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><%= stats.unique_sections %></dd>
+      </div>
+    </dl>
+  </div>
+
+  <!-- Map -->
+  <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="px-4 py-5 sm:p-6">
+        <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Contact Map</h3>
+        <div id="map" class="rounded-lg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Contacts -->
+  <div class="mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div class="px-4 py-5 sm:p-6">
+        <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Recent Contacts</h3>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-300">
+            <thead>
+              <tr>
+                <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Time (UTC)</th>
+                <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Station</th>
+                <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Callsign</th>
+                <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Class</th>
+                <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Section</th>
+                <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Band</th>
+                <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Mode</th>
+                <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Operator</th>
+              </tr>
+            </thead>
+            <tbody id="recentBody" class="divide-y divide-gray-200">
+              <% recentContacts.forEach(contact => { %>
+              <tr>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= new Date(contact.created_at).toISOString().slice(11, 16) %></td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= contact.station_name %></td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-900"><%= contact.callsign %></td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= contact.class %></td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= contact.section %></td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                  <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10"><%= contact.band %></span>
+                </td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                  <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-700/10"><%= contact.mode %></span>
+                </td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= contact.operator %></td>
+              </tr>
+              <% }) %>
+              <% if (recentContacts.length === 0) { %>
+              <tr>
+                <td colspan="8" class="px-3 py-8 text-center text-sm text-gray-500">No contacts logged yet. Go to a station to start logging!</td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="/js/dashboard.js"></script>
+</body>
+</html>
