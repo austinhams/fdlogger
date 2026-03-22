@@ -1,7 +1,3 @@
--- Reference schema. Actual schema is managed by migrations in db/migrations/.
--- To apply migrations automatically, just start the server.
--- To apply manually:  node -e "require('./db/migrate').runMigrations()"
-
 CREATE TABLE IF NOT EXISTS stations (
   id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,

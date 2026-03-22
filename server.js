@@ -7,6 +7,7 @@ const stationsRouter = require('./routes/stations');
 const contactsRouter = require('./routes/contacts');
 const exportRouter = require('./routes/export');
 const wsjtx = require('./lib/wsjtx');
+const { runMigrations } = require('./db/migrate');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -53,49 +54,14 @@ app.use('/stations', stationsRouter);
 app.use('/contacts', contactsRouter);
 app.use('/export', exportRouter);
 
-async function initDb() {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS stations (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        band VARCHAR(20) NOT NULL,
-        mode VARCHAR(20) NOT NULL,
-        power VARCHAR(20) NOT NULL,
-        current_operator VARCHAR(50) DEFAULT '',
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-      )
-    `);
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS contacts (
-        id SERIAL PRIMARY KEY,
-        station_id INTEGER NOT NULL REFERENCES stations(id) ON DELETE CASCADE,
-        callsign VARCHAR(20) NOT NULL,
-        class VARCHAR(10) NOT NULL,
-        section VARCHAR(10) NOT NULL,
-        band VARCHAR(20) NOT NULL,
-        mode VARCHAR(20) NOT NULL,
-        power VARCHAR(20) NOT NULL,
-        operator VARCHAR(50) NOT NULL,
-        frequency INTEGER DEFAULT 0,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-      )
-    `);
-    await pool.query('CREATE INDEX IF NOT EXISTS idx_contacts_station ON contacts(station_id)');
-    await pool.query('CREATE INDEX IF NOT EXISTS idx_contacts_section ON contacts(section)');
-    await pool.query('CREATE INDEX IF NOT EXISTS idx_contacts_callsign ON contacts(callsign)');
-    console.log('Database tables ready');
-  } catch (err) {
-    console.error('Database initialization failed:', err.message);
-    process.exit(1);
-  }
-}
-
-initDb().then(() => {
+runMigrations().then(() => {
   app.listen(PORT, () => {
     console.log(`FD Logger running on http://localhost:${PORT}`);
   });
 
   // Start WSJT-X UDP listener (default port 2237)
   wsjtx.startListener();
+}).catch((err) => {
+  console.error('Migration failed:', err.message);
+  process.exit(1);
 });
