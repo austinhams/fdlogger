@@ -3,8 +3,24 @@ name: Build and Push Container
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - '*.md'
+      - 'LICENSE'
+      - '.gitignore'
+      - '.env*'
+      - 'docs/**'
+      - '.github/**'
+      - 'db/schema.sql'
   pull_request:
     branches: [main]
+    paths-ignore:
+      - '*.md'
+      - 'LICENSE'
+      - '.gitignore'
+      - '.env*'
+      - 'docs/**'
+      - '.github/**'
+      - 'db/schema.sql'
 
 env:
   REGISTRY: ghcr.io
