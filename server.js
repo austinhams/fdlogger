@@ -6,6 +6,7 @@ const pool = require('./db/pool');
 const stationsRouter = require('./routes/stations');
 const contactsRouter = require('./routes/contacts');
 const exportRouter = require('./routes/export');
+const wsjtx = require('./lib/wsjtx');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -94,4 +95,7 @@ initDb().then(() => {
   app.listen(PORT, () => {
     console.log(`FD Logger running on http://localhost:${PORT}`);
   });
+
+  // Start WSJT-X UDP listener (default port 2237)
+  wsjtx.startListener();
 });
