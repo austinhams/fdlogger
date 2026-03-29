@@ -9,6 +9,11 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fdlogger"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   app:
     image: ghcr.io/austinhams/fdlogger:latest
@@ -20,7 +25,8 @@ services:
       - "3000:3000"
       - "2237:2237/udp"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   npm:
     image: jc21/nginx-proxy-manager:latest
