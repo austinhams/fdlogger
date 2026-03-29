@@ -11,7 +11,8 @@ services:
       - "5432:5432"
 
   app:
-    build: .
+    image: ghcr.io/austinhams/fdlogger:latest
+    pull_policy: always
     environment:
       DATABASE_URL: postgresql://fdlogger:fdlogger@db:5432/fdlogger
       PORT: "3000"
@@ -21,5 +22,20 @@ services:
     depends_on:
       - db
 
+  npm:
+    image: jc21/nginx-proxy-manager:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "81:81"
+    volumes:
+      - npm_data:/data
+      - npm_letsencrypt:/etc/letsencrypt
+    depends_on:
+      - app
+
 volumes:
   pgdata:
+  npm_data:
+  npm_letsencrypt:
