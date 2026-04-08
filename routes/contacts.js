@@ -100,9 +100,17 @@ router.get('/api/dashboard', async (req, res) => {
       ORDER BY c.created_at DESC
       LIMIT 20
     `);
+    const scoreboardResult = await pool.query(`
+      SELECT operator, COUNT(*) as contact_count
+      FROM contacts
+      WHERE operator != ''
+      GROUP BY operator
+      ORDER BY contact_count DESC
+    `);
     res.json({
       stats: statsResult.rows[0],
-      recentContacts: recentResult.rows
+      recentContacts: recentResult.rows,
+      scoreboard: scoreboardResult.rows
     });
   } catch (err) {
     console.error(err);

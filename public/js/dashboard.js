@@ -153,6 +153,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     }).join('');
   }
 
+  function updateScoreboard(scoreboard) {
+    const tbody = document.getElementById('scoreboardBody');
+    if (!tbody) return;
+
+    if (!scoreboard || scoreboard.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="3" class="px-3 py-8 text-center text-sm text-gray-500">No contacts logged yet.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = scoreboard.map((row, i) => {
+      return '<tr>' +
+        '<td class="whitespace-nowrap px-3 py-3 text-sm text-gray-500">' + (i + 1) + '</td>' +
+        '<td class="whitespace-nowrap px-3 py-3 text-sm font-medium text-gray-900">' + escapeHtml(row.operator) + '</td>' +
+        '<td class="whitespace-nowrap px-3 py-3 text-sm text-right font-semibold text-indigo-600">' + escapeHtml(String(row.contact_count)) + '</td>' +
+        '</tr>';
+    }).join('');
+  }
+
   async function refresh() {
     try {
       const [dashResp, allResp] = await Promise.all([
@@ -164,6 +182,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       updateStats(dashData.stats);
       updateRecentTable(dashData.recentContacts);
+      updateScoreboard(dashData.scoreboard);
 
       const { contactedSections, sectionCounts, contactedStates } = buildContactData(allContacts);
       updateMap(contactedSections, sectionCounts, contactedStates);

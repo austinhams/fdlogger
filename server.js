@@ -39,9 +39,18 @@ app.get('/', async (req, res) => {
       LIMIT 20
     `);
 
+    const scoreboardResult = await pool.query(`
+      SELECT operator, COUNT(*) as contact_count
+      FROM contacts
+      WHERE operator != ''
+      GROUP BY operator
+      ORDER BY contact_count DESC
+    `);
+
     res.render('dashboard', {
       stats,
       recentContacts: recentResult.rows,
+      scoreboard: scoreboardResult.rows,
       page: 'dashboard'
     });
   } catch (err) {
