@@ -59,6 +59,11 @@ app.get('/', async (req, res) => {
   }
 });
 
+// Map page
+app.get('/map', (req, res) => {
+  res.render('map', { page: 'map' });
+});
+
 app.use('/stations', stationsRouter);
 app.use('/contacts', contactsRouter);
 app.use('/export', exportRouter);

@@ -1,0 +1,19 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+
+<style>
+  #map { height: calc(100vh - 4rem); }
+</style>
+
+<main>
+  <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <h1 class="text-2xl font-bold tracking-tight text-gray-900 mb-4">Contact Map</h1>
+    <div class="overflow-hidden rounded-lg bg-white shadow">
+      <div id="map" class="rounded-lg"></div>
+    </div>
+  </div>
+</main>
+
+<script src="/js/map.js"></script>
+</body>
+</html>
